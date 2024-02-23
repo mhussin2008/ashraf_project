@@ -1,0 +1,89 @@
+
+Imports IronXL
+
+Public Class Form1
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Rb1.Checked = True
+
+
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim wb As WorkBook
+        Dim sheet As WorkSheet
+        Dim start As Integer
+        Dim noteCount As Integer
+        'On Error Resume Next
+
+        Dim row As Integer, col As Integer
+
+        If (txtStart.Text = "") Then
+            MsgBox("Number must be Greater than Zero")
+
+            Exit Sub
+        End If
+
+        start = CInt(txtStart.Text)
+        If (start = 0) Then
+            MsgBox("Number must be Greater than Zero")
+
+            Exit Sub
+        End If
+        ' /////////////////////////////////////
+
+        If (txtNoteCount.Text = "") Then
+            MsgBox("Note Counts must be Greater than Zero")
+
+            Exit Sub
+        End If
+
+        noteCount = CInt(txtNoteCount.Text)
+        If (noteCount = 0) Then
+            MsgBox("Note Counts must be Greater than Zero")
+
+            Exit Sub
+        End If
+
+
+
+        wb = WorkBook.Create(ExcelFileFormat.XLSX)
+        sheet = wb.CreateWorkSheet("Result Sheet")
+
+        If Rb1.Checked = True Then
+            Dim i As Integer
+            For i = 0 To start + noteCount * 50
+                sheet.SetCellValue(i, 0, i + start)
+            Next i
+            wb.SaveAs("c:\results\Budget.xlsx")
+            Exit Sub
+        End If
+
+        'sheet.SetCellValue(row, col, "Red")
+
+        ' Two Columns
+        If Rb2.Checked = True Then
+            Dim stepper, i As Integer
+            If (noteCount Mod 2) = 1 Then
+                noteCount = noteCount + 1
+                txtNoteCount.Text = noteCount.ToString
+
+            End If
+            Dim increment As Integer
+            increment = 0
+
+            For stepper = 1 To (noteCount / 2)
+                For i = 0 To 49
+                    sheet.SetCellValue(i + (stepper - 1) * 50, 0, i + start + increment)
+                    sheet.SetCellValue(i + (stepper - 1) * 50, 1, i + start + increment + 50)
+                Next i
+                increment = increment + 100
+            Next stepper
+            wb.SaveAs("c:\results\Budget.xlsx")
+            Exit Sub
+        End If
+
+
+
+        ' wb.SaveAs("c:\results\Budget.xlsx")
+    End Sub
+End Class
